@@ -5,6 +5,10 @@
 #include <string.h>
 
 #define GRID_SIZE 9
+#define BOX_SIZE 3
+#define BOX_PER_COL 3
+#define BOX_PER_ROW 3
+#define NUMBER_SUM 45
 
 typedef struct {
 
