@@ -22,6 +22,14 @@ typedef struct {
 
 } game_state;
 
+typedef struct {
+
+    //for standard sudoku, this will be 729x324
+    int matrix[GRID_SIZE*GRID_SIZE*GRID_SIZE][GRID_SIZE*GRID_SIZE*GRID_SIZE*4];
+
+} sparse_matrix;
+
+
 int print_grid(sudoku_grid grid);
 int populate_grid(sudoku_grid *grid, game_state state);
 

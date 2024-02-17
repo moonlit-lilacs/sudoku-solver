@@ -1,4 +1,5 @@
 #include "sudoku.h"
+#include "solver.c"
 
 int print_grid(sudoku_grid grid){
 
@@ -61,11 +62,11 @@ int check_solution(sudoku_grid *grid){
                 for (int col = 0; col < BOX_SIZE; col++){
                     counter -= grid->matrix[(3*box_row)+row][(3*box_col)+col];
                 }
-                if (counter != 0){
+            }
+            if (counter != 0){
                         return 0;
                 }
                 counter = NUMBER_SUM;
-            }
         }
     }
 
