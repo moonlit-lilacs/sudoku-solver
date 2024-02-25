@@ -45,10 +45,28 @@ sparse_matrix create_DLX_matrix(int sudoku[GRID_SIZE][GRID_SIZE]) {
     return s_matrix;
 }
 
-Node* create_dancing_links(sparse_matrix matrix){
+column_node* create_dancing_links(sparse_matrix matrix){
     
-    Node* anchor_node;
+    column_node* anchor_node = malloc(sizeof(column_node));
+    
+    anchor_node->ind = -1;
+    anchor_node->left = anchor_node;
+    anchor_node->right = anchor_node;
 
+    column_node* cursor = anchor_node;
+    
+    for(int i = 0; i < matrix.cols; i++){
+        column_node* column = malloc(sizeof(column_node));
+        column->ind = i;
+
+        //standard circularly linked list insertion. because these are only column nodes, we don't need to worry about the vertical circularity yet.
+        column->left = cursor;
+        column->right = cursor->right;
+        cursor->right->left = column;
+        cursor->right = column;
+        
+        cursor = column;
+    }
     
     return anchor_node;
 }
@@ -64,10 +82,19 @@ int index_constraints(int row, int col, int num, int* constraints) {
     return 0;
 }
 
-ColumnNode cover_column(ColumnNode col){
-
+column_node cover_column(column_node col){
+    return col;
 }
 
-ColumnNode uncover_column(ColumnNode col){
-    
+column_node uncover_column(column_node col){
+    return col;
+}
+
+void print_circularly_linked_list(column_node* n){
+    column_node* cursor = n->right;
+    printf("%d\n", n->ind);
+    while(cursor != n){
+        printf("%d\n", cursor->ind);
+        cursor = cursor->right;
+    }
 }
