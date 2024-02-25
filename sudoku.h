@@ -9,6 +9,7 @@
 #define BOX_PER_COL 3
 #define BOX_PER_ROW 3
 #define NUMBER_SUM 45
+#define UNIQUE_NUMS 9
 
 typedef struct {
 
@@ -25,7 +26,9 @@ typedef struct {
 typedef struct {
 
     //for standard sudoku, this will be 729x324
-    int matrix[GRID_SIZE*GRID_SIZE*GRID_SIZE][GRID_SIZE*GRID_SIZE*GRID_SIZE*4];
+    int rows;
+    int cols;
+    int matrix[GRID_SIZE*GRID_SIZE*GRID_SIZE][GRID_SIZE*GRID_SIZE*4];
 
 } sparse_matrix;
 
