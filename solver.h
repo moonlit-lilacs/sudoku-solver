@@ -19,8 +19,8 @@ typedef struct column_node{
     struct column_node *left, *right;
 } column_node;
 
-column_node* create_dancing_links(sparse_matrix matrix);
-sparse_matrix create_DLX_matrix(int sudoku[GRID_SIZE][GRID_SIZE]);
+column_node* create_dancing_links(sparse_matrix* matrix);
+sparse_matrix* create_DLX_matrix(int sudoku[GRID_SIZE][GRID_SIZE]);
 int index_constraints(int row, int col, int num, int* constraints);
 column_node cover_column(column_node col);
 column_node uncover_column(column_node col);
