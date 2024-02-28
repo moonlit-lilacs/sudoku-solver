@@ -13,10 +13,9 @@ typedef struct node {
 
 
 typedef struct column_node{
-    node head;
+    node header;
     int size; // number of nodes belonging to the column
     int ind;
-    struct column_node *left, *right;
 } column_node;
 
 column_node* create_dancing_links(sparse_matrix* matrix);
