@@ -13,7 +13,7 @@ typedef struct node {
 
 
 typedef struct column_node{
-    column_node *left, *right;
+    struct column_node *left, *right;
     node *up, *down;
     int size; // number of nodes belonging to the column
     int ind;
