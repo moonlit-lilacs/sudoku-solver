@@ -9,6 +9,7 @@
 typedef struct node {
     struct node *left, *right, *up, *down;
     struct column_node *column;
+    int id;
 } node;
 
 

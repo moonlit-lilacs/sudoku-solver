@@ -70,6 +70,8 @@ column_node* create_dancing_links(sparse_matrix* matrix){
         last_column = new_column;
     }
 
+    int id_counter = 0;
+
     for(int row = 0; row < matrix->rows; row++){
         node* row_start_node = NULL;
         
@@ -77,12 +79,13 @@ column_node* create_dancing_links(sparse_matrix* matrix){
             node* last_node = NULL;
             if(matrix->matrix[row][col] == 1){
                 column_node* col_header = anchor_node->right;
-                node* recent_column = NULL;
                 while(col_header->ind != col){
                     col_header = col_header->right;
                 }
                 
                 node* new_node = malloc(sizeof(node));
+                new_node->id = id_counter;
+                id_counter++;
                 new_node->column = col_header;
                 col_header->size++;
                 
@@ -91,7 +94,6 @@ column_node* create_dancing_links(sparse_matrix* matrix){
                     new_node->right = new_node;
                     row_start_node = new_node;
                 }
-                
                 else{
                     new_node->right = row_start_node;
                     new_node->left = row_start_node->left;
@@ -99,26 +101,26 @@ column_node* create_dancing_links(sparse_matrix* matrix){
                     row_start_node->left = new_node;
                 }
 
-                if(col_header->down == NULL){
+
+                if(col_header->up == NULL){
+                    col_header->up = new_node;
                     col_header->down = new_node;
-                }
-                if(recent_column == NULL){
                     new_node->up = new_node;
                     new_node->down = new_node;
                 }
                 else{
-                    new_node->up = recent_column;
-                    new_node->down = recent_column->down;
+                    new_node->up = col_header->up;
+                    new_node->down = col_header->down;
                     new_node->down->up = new_node;
                     new_node->up->down = new_node;
+                    col_header->up = new_node;
                 }
-                new_node->column = col_header;
-                col_header->up = new_node;
                 
             }
 
         }
     }
+    free(matrix);
     return anchor_node;
 }
 
