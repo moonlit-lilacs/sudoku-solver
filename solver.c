@@ -1,7 +1,7 @@
 #include "solver.h"
 
 
-sparse_matrix* create_DLX_matrix(int sudoku[GRID_SIZE][GRID_SIZE]) {
+sparse_matrix* generate_sparse_matrix(int sudoku[GRID_SIZE][GRID_SIZE]) {
 
     sparse_matrix* s_matrix = malloc(sizeof(sparse_matrix));
     s_matrix->rows = GRID_SIZE*GRID_SIZE*GRID_SIZE;
@@ -48,11 +48,8 @@ column_node* create_dancing_links(sparse_matrix* matrix){
     column_node* anchor_node = malloc(sizeof(column_node));
     
     anchor_node->ind = -1;
-    anchor_node->header.left = (node *) anchor_node;
-    anchor_node->header.right = (node *) anchor_node;
-    anchor_node->header.up = (node *) anchor_node;
-    anchor_node->header.down = (node *) anchor_node;
-    anchor_node->header.column = anchor_node;
+    anchor_node->left = anchor_node;
+    anchor_node->right = anchor_node;
 
     column_node* last_column = anchor_node;
     
@@ -60,16 +57,15 @@ column_node* create_dancing_links(sparse_matrix* matrix){
         column_node* new_column = malloc(sizeof(column_node));
         new_column->ind = i;
         new_column->size = 0;
-        new_column->header.column = new_column;
 
         //standard circularly linked list insertion.
-        new_column->header.left = &(last_column->header);
-        new_column->header.right = last_column->header.right;
-        new_column->header.up = (node *) new_column;
-        new_column->header.down = (node *) new_column;
+        new_column->left = last_column;
+        new_column->right = last_column->right;
+        new_column->up = NULL;
+        new_column->down = NULL;
 
-        last_column->header.right->left = (node *) new_column;
-        last_column->header.right = (node *) new_column;
+        last_column->right->left = new_column;
+        last_column->right = new_column;
 
         last_column = new_column;
     }
@@ -80,10 +76,10 @@ column_node* create_dancing_links(sparse_matrix* matrix){
         for(int col = 0; col < matrix->cols; col++){
             node* last_node = NULL;
             if(matrix->matrix[row][col] == 1){
-                column_node* col_header = anchor_node->header.right->column;
-
+                column_node* col_header = anchor_node->right;
+                node* recent_column = NULL;
                 while(col_header->ind != col){
-                    col_header = col_header->header.right->column;
+                    col_header = col_header->right;
                 }
                 
                 node* new_node = malloc(sizeof(node));
@@ -103,11 +99,21 @@ column_node* create_dancing_links(sparse_matrix* matrix){
                     row_start_node->left = new_node;
                 }
 
-
-                new_node->down = (node *) col_header;
-                new_node->up = col_header->header.up;
-                col_header->header.up->down = new_node;
-                col_header->header.up = new_node;
+                if(col_header->down == NULL){
+                    col_header->down = new_node;
+                }
+                if(recent_column == NULL){
+                    new_node->up = new_node;
+                    new_node->down = new_node;
+                }
+                else{
+                    new_node->up = recent_column;
+                    new_node->down = recent_column->down;
+                    new_node->down->up = new_node;
+                    new_node->up->down = new_node;
+                }
+                new_node->column = col_header;
+                col_header->up = new_node;
                 
             }
 
@@ -136,10 +142,10 @@ column_node uncover_column(column_node col){
 }
 
 void print_circularly_linked_list(column_node* n){
-    column_node* cursor = n->header.right->column;
+    column_node* cursor = n->right;
     printf("%d\n", n->ind);
     while(cursor != n){
         printf("%d\n", cursor->ind);
-        cursor = cursor->header.right->column;
+        cursor = cursor->right;
     }
 }

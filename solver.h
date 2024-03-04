@@ -13,13 +13,14 @@ typedef struct node {
 
 
 typedef struct column_node{
-    node header;
+    column_node *left, *right;
+    node *up, *down;
     int size; // number of nodes belonging to the column
     int ind;
 } column_node;
 
 column_node* create_dancing_links(sparse_matrix* matrix);
-sparse_matrix* create_DLX_matrix(int sudoku[GRID_SIZE][GRID_SIZE]);
+sparse_matrix* generate_sparse_matrix(int sudoku[GRID_SIZE][GRID_SIZE]);
 int index_constraints(int row, int col, int num, int* constraints);
 column_node cover_column(column_node col);
 column_node uncover_column(column_node col);
